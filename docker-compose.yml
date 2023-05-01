@@ -1,0 +1,64 @@
+---
+x-common-template: &x_common_template
+  privileged: true
+  stop_signal: SIGKILL
+  tmpfs:
+    - /run
+    - /run/lock
+    - /tmp
+    - /sys/fs/cgroup/systemd
+    - /var/lib/journal
+  networks:
+    systemd_resolved:
+
+version: "3.9"
+services:
+  fc36_no_soa_client:
+    <<: *x_common_template
+    volumes: ["$PWD/results/fc36_no_soa_client:/client"]
+    build:
+      dockerfile: ./Dockerfiles/fc36_client
+    dns: 10.89.3.251
+
+  fc36_client:
+    <<: *x_common_template
+    volumes: ["$PWD/results/fc36_client:/client"]
+    build:
+      dockerfile: ./Dockerfiles/fc36_client
+    dns: 10.89.3.252
+
+  ubuntu2204_client:
+    <<: *x_common_template
+    volumes: ["$PWD/results/ubuntu2204_client:/client"]
+    build:
+      dockerfile: ./Dockerfiles/ubuntu2204_client
+    dns: 10.89.3.252
+
+  fc36_bind916:
+    <<: *x_common_template
+    volumes:
+      - "$PWD/named-default.conf:/etc/named.conf"
+      - "$PWD/rpz.local:/var/cache/bind/zones/rpz.local"
+    build:
+      dockerfile: ./Dockerfiles/fc36_bind916
+    networks:
+      systemd_resolved:
+        ipv4_address: 10.89.3.252
+
+  fc36_bind916_no_soa:
+    <<: *x_common_template
+    volumes:
+      - "$PWD/named-no-soa.conf:/etc/named.conf"
+      - "$PWD/rpz.local:/var/cache/bind/zones/rpz.local"
+    build:
+      dockerfile: ./Dockerfiles/fc36_bind916
+    networks:
+      systemd_resolved:
+        ipv4_address: 10.89.3.251
+
+networks:
+  systemd_resolved:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.89.3.0/24

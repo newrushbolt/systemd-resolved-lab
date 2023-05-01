@@ -1,0 +1,6 @@
+FROM fedora:36
+
+RUN dnf install -y systemd-resolved-250.10-2.fc36 \
+        procps-ng bind-utils strace ltrace curl
+
+CMD [ "/sbin/init" ]

@@ -1,0 +1,7 @@
+FROM fedora:36
+
+RUN dnf install -y bind-9.16.38-1.fc36 procps-ng systemd && \
+    systemctl enable named && \
+    systemctl disable systemd-resolved.service
+
+CMD [ "/sbin/init" ]

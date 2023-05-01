@@ -1,0 +1,6 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+        dnsutils strace ltrace curl systemd=249.11-0ubuntu3.9
+
+CMD [ "/usr/bin/systemd" ]

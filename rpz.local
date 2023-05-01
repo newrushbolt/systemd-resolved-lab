@@ -1,0 +1,11 @@
+$TTL 60
+@   IN  SOA localhost.  root.localhost. (
+2304121446   ; serial
+1h  ; refresh
+30m    ; retry
+1w   ; expiry
+5m) ; minimum
+    IN     NS    localhost.
+
+localhost             A   127.0.0.1
+registry.company.com  A   127.0.0.1
